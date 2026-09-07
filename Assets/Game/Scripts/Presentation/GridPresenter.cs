@@ -13,20 +13,34 @@ namespace LanternDepths.Presentation
         private readonly List<Pictogram> items = new List<Pictogram>();
         private readonly Dictionary<GridPosition, ItemInstance> shownItems = new Dictionary<GridPosition, ItemInstance>();
         private float cell;
-        private int height;
+        private int width, height;
         private readonly System.Action<int> inspect;
         private readonly System.Action<GridPosition> inspectItem;
         public GridPresenter(VisualElement root, System.Action<int> inspect = null, System.Action<GridPosition> inspectItem = null)
-        { this.root = root; this.inspect = inspect; this.inspectItem = inspectItem; }
+        {
+            this.root = root; this.inspect = inspect; this.inspectItem = inspectItem;
+            root.parent?.RegisterCallback<GeometryChangedEvent>(_ => Resize());
+        }
+        private void Resize()
+        {
+            if (width == 0 || root.parent == null) return;
+            var bounds = root.parent.contentRect;
+            if (bounds.width <= 0 || bounds.height <= 0) return;
+            cell = Mathf.Min(bounds.width / width, bounds.height / height);
+            root.style.width = cell * width; root.style.height = cell * height;
+            foreach (var element in root.Children())
+                if (element.userData is GridPosition position) Place(element, position);
+        }
         public Vector2 GridToWorld(GridPosition position) => new Vector2(position.X * cell, (height - 1 - position.Y) * cell);
         private void Place(VisualElement element, GridPosition position)
         {
+            element.userData = position;
             var p = GridToWorld(position); element.style.left = p.x; element.style.top = p.y;
             element.style.width = cell; element.style.height = cell;
         }
         public void Build(RunState state)
         {
-            root.Clear(); actors.Clear(); items.Clear(); shownItems.Clear(); height = state.Floor.Map.Height;
+            root.Clear(); actors.Clear(); items.Clear(); shownItems.Clear(); height = state.Floor.Map.Height; width = state.Floor.Map.Width;
             cell = Mathf.Min(800f / state.Floor.Map.Width, 460f / height);
             root.style.width = cell * state.Floor.Map.Width; root.style.height = cell * height;
             for (int y = 0; y < height; y++) for (int x = 0; x < state.Floor.Map.Width; x++)
@@ -38,7 +52,7 @@ namespace LanternDepths.Presentation
             }
             var stairs = Glyph("stairs", "stairs"); Place(stairs, state.Floor.Stairs); root.Add(stairs);
             foreach (var enemy in state.Floor.Enemies) if (enemy.IsAlive) AddActor(enemy, enemy.Role.ToString(), "enemy");
-            AddActor(state.Player, "lantern", "player"); Sync(state);
+            AddActor(state.Player, "lantern", "player"); Sync(state); Resize();
         }
         private Pictogram Glyph(string shape, string role)
         {

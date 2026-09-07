@@ -149,6 +149,15 @@ namespace LanternDepths.Presentation
         {
             yield return new WaitForSecondsRealtime(0.2f);
             yield return new WaitForEndOfFrame();
+            if (name.StartsWith("exploration-"))
+            {
+                var document = FindFirstObjectByType<GameBootstrap>().GetComponent<UnityEngine.UIElements.UIDocument>();
+                var root = document.rootVisualElement;
+                var map = UnityEngine.UIElements.UQueryExtensions.Q<UnityEngine.UIElements.VisualElement>(root, className: "map");
+                var bounds = map.worldBound;
+                Check(bounds.width * bounds.height > root.worldBound.width * root.worldBound.height * .5f, "Map no longer occupies most of the screen.");
+                Check(bounds.xMin >= 0 && bounds.yMin >= 0 && bounds.xMax <= root.worldBound.xMax + 1 && bounds.yMax <= root.worldBound.yMax + 1, "Resized map is clipped.");
+            }
             string path = Path.Combine(output, name + ".png"); ScreenCapture.CaptureScreenshot(path);
             float deadline = Time.realtimeSinceStartup + 10;
             while (!File.Exists(path) && Time.realtimeSinceStartup < deadline) yield return null;

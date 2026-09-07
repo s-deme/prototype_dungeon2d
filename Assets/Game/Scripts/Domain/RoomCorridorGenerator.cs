@@ -150,12 +150,14 @@ namespace LanternDepths
         private static bool CanCarve(DungeonMap map, GridPosition position, GridPosition start, GridPosition goal)
         {
             if (!IsInterior(map, position) || map.GetTile(position).Terrain != Terrain.Wall) return false;
-            foreach (var direction in CardinalDirections)
+            int roomNeighbors = 0;
+            foreach (var direction in MovementRules.Directions)
             {
                 var terrain = map.GetTile(position + direction).Terrain;
                 if (terrain == Terrain.Corridor || (terrain == Terrain.Room && position != start && position != goal)) return false;
+                if (terrain == Terrain.Room && (direction.X == 0 || direction.Y == 0)) roomNeighbors++;
             }
-            return true;
+            return roomNeighbors <= 1;
         }
 
         private static bool IsOneTileWide(List<GridPosition> path)
@@ -200,12 +202,7 @@ namespace LanternDepths
             if (!IsOneTileWide(path)) return false;
             for (int i = 0; i < path.Count; i++)
             {
-                if (!IsInterior(map, path[i]) || map.GetTile(path[i]).Terrain != Terrain.Wall) return false;
-                foreach (var direction in CardinalDirections)
-                {
-                    var terrain = map.GetTile(path[i] + direction).Terrain;
-                    if (terrain == Terrain.Corridor || (terrain == Terrain.Room && i != 0)) return false;
-                }
+                if (!CanCarve(map, path[i], path[0], path[0])) return false;
             }
             return true;
         }

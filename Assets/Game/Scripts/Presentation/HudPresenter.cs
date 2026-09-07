@@ -10,7 +10,7 @@ namespace LanternDepths.Presentation
         public VisualElement Map { get; }
         public VisualElement Pack { get; }
         public Toggle Animate { get; }
-        private readonly Label stats, healthText, equipment, floor, log, context, deathSummary, outcomeTitle, outcomeDetail, objective;
+        private readonly Label stats, healthText, equipment, floor, log, context, deathSummary, outcomeTitle, outcomeDetail;
         private readonly VisualElement healthFill, death;
         private readonly Button pickup, action;
         private readonly Label inspector;
@@ -23,18 +23,15 @@ namespace LanternDepths.Presentation
             root.style.flexGrow = 1; root.style.alignItems = Align.Center;
             var shell = new VisualElement(); root.Add(shell); root = shell;
             Root = root; root.AddToClassList("game");
-            var header = Box(root, "header");
-            var identity = Box(header, "identity"); Text(identity, "LANTERN DEPTHS", "title"); Text(identity, "A turn-based descent into the ember vaults", "muted");
-            var navigation = Box(header, "identity"); floor = Text(navigation, "", "floor-number");
-            InventoryPresenter.AddButton(navigation, "Menu [Esc / Start]", openMenu);
             var body = Box(root, "body"); var world = Box(body, "world");
-            var bar = Box(world, "map-heading"); Text(bar, "THE EMBER VAULTS", "section-title"); context = Text(bar, "", "muted");
             var frame = Box(world, "map-frame"); Map = Box(frame, "map");
-            Text(world, "Lantern: you / Triangle: facing / Click or focus an enemy or item to inspect.", "legend");
-            var sidebar = Box(body, "sidebar"); Text(sidebar, "WAYFARER", "section-title");
+            var sidebarScroll = new ScrollView(ScrollViewMode.Vertical); sidebarScroll.AddToClassList("sidebar-scroll"); body.Add(sidebarScroll);
+            var sidebar = Box(sidebarScroll, "sidebar");
+            floor = Text(sidebar, "", "floor-number");
+            InventoryPresenter.AddButton(sidebar, "Menu [Esc / Start]", openMenu);
             healthText = Text(sidebar, "", "health-text"); var health = Box(sidebar, "health-track"); healthFill = Box(health, "health-fill");
             stats = Text(sidebar, "", "stats"); equipment = Text(sidebar, "", "equipment");
-            objective = Text(sidebar, "", "muted");
+            context = Text(sidebar, "", "muted");
             var actions = Box(sidebar, "actions");
             var firstRow = Box(actions, "button-row"); var secondRow = Box(actions, "button-row");
             InventoryPresenter.AddButton(firstRow, "Pack [I / Y]", togglePack);
@@ -44,7 +41,7 @@ namespace LanternDepths.Presentation
             InventoryPresenter.AddButton(sidebar, "Inspect [Tab / RS]", CycleEnemy);
             inspector = Text(sidebar, "", "muted");
             Animate = new Toggle("Animate turns [F / Back]") { value = true, focusable = false };
-            var logPanel = Box(root, "log-panel"); Text(logPanel, "JOURNAL", "section-title"); log = Text(logPanel, "", "log");
+            var logPanel = Box(sidebar, "log-panel"); Text(logPanel, "JOURNAL", "section-title"); log = Text(logPanel, "", "log");
             Pack = Box(root, "pack-panel");
             death = Box(root, "death-overlay"); var card = Box(death, "death-card");
             outcomeTitle = Text(card, "", "title"); deathSummary = Text(card, "", "death-summary");
@@ -59,7 +56,6 @@ namespace LanternDepths.Presentation
             current = state; RefreshEnemy();
             floor.text = $"FLOOR {state.FloorNumber:00} / {game.FinalFloor:00}  ·  {new[] { "Entrance", "Wisp passages", "Old armory", "Ember approach", "Guardian vault" }[Math.Min(state.FloorNumber - 1, 4)]}";
             bool finalFloor = state.FloorNumber == game.FinalFloor;
-            objective.text = finalFloor ? "Recover the ember at the stairs to win." : $"Reach floor {game.FinalFloor} and recover the ember.";
             healthText.text = $"HP  {p.Hp} / {p.MaxHp}"; healthFill.style.width = Length.Percent(100f * p.Hp / p.MaxHp);
             healthFill.EnableInClassList("low-health", p.Hp * 3 <= p.MaxHp);
             int next = state.Progression.NextThreshold(p);

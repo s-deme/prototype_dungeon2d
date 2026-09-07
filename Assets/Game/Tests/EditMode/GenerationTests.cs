@@ -39,7 +39,7 @@ namespace LanternDepths.Tests
         [Test] public void CorridorsAreSingleWidthAndTreasureOnlyUsesDeadEnds()
         {
             var rules = new RunRules(40, 28, 8, 6, 30, 6, 1, new ProgressionRules(new[] { 12 }, 5, 2), TacticalTests.Items());
-            for (int seed = 0; seed < 25; seed++)
+            for (int seed = 0; seed < 100; seed++)
             {
                 var floor = new FloorFactory(new RoomCorridorGenerator(), rules).Create(new Random(seed), 1);
                 int rewards = 0;
@@ -52,10 +52,22 @@ namespace LanternDepths.Tests
                     {
                         var neighbor = floor.Map.GetTile(position + direction);
                         if (neighbor.Terrain == Terrain.Corridor) corridorNeighbors++;
-                        if (neighbor.Terrain == Terrain.Room) roomNeighbors++;
+                        if (neighbor.RoomId >= 0) roomNeighbors++;
                         if (neighbor.IsWalkable) exits++;
                     }
                     Assert.That(corridorNeighbors, Is.LessThanOrEqualTo(2), $"Seed {seed} has a double-width corridor.");
+                    Assert.That(roomNeighbors, Is.LessThanOrEqualTo(1), $"Seed {seed}: doorway touches multiple room tiles at {position}.");
+                    foreach (var direction in MovementRules.Directions)
+                    {
+                        var adjacent = position + direction;
+                        if (roomNeighbors == 0)
+                            Assert.That(floor.Map.GetTile(adjacent).RoomId, Is.EqualTo(-1), $"Seed {seed}: corridor lacks a wall buffer at {position}.");
+                        if (floor.Map.GetTile(adjacent).RoomId >= 0 && (direction.X == 0 || direction.Y == 0) && corridorNeighbors > 0)
+                            Assert.That(floor.Map.GetTile(position - direction).Terrain, Is.EqualTo(Terrain.Corridor), $"Seed {seed}: doorway must leave the room straight at {position}.");
+                        if (direction.X == 0 || direction.Y == 0) continue;
+                        Assert.That(floor.Map.IsWalkable(adjacent) && floor.Map.IsWalkable(position + new GridPosition(direction.X, 0)) && floor.Map.IsWalkable(position + new GridPosition(0, direction.Y)), Is.False,
+                            $"Seed {seed}: walkable 2 x 2 block contains a corridor at {position}.");
+                    }
                     if (roomNeighbors > 0) Assert.That(corridorNeighbors, Is.LessThanOrEqualTo(1), $"Seed {seed} has a corridor running alongside a room.");
                     var item = floor.GetItemAt(position);
                     if (item != null)
