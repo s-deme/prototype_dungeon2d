@@ -28,12 +28,12 @@ B 守護者は攻撃を予告してから強打。隣接しない位置へ移動
 移動：矢印、WASD、テンキー1〜9（5以外）/ 左スティック・D-pad
 斜め移動：Q E Z C / テンキー7 9 1 3
 待機：Space・テンキー5 / A
-拾う：G / X　持ち物：I / Y　階段：Enter / LB
+拾う：G / X　持ち物：I / Y　便利操作（拾う・階段・待機）：Enter / LB
 持ち物で選択：上下 / D-pad　使用：U / A　装備・解除：E / X　置く：D / RB
 敵情報：Tab / 右スティック押し込み
 メニュー：Esc / Start　決定：Enter・テンキーEnter / A　閉じる：Esc / B
 演出切替：F / Back　終了後の再挑戦：R
-1回押すと1行動。スティックは中央に戻してから倒し直してください。
+移動キーやスティックを押しっぱなしにすると、短い待ち時間の後に連続移動します。
 
 設定
 メニュー > 設定・遊び方・記録 > 設定
@@ -69,7 +69,7 @@ Windowsの日本語フォント（游ゴシック等）を使用します。文�
 English quick start
 Extract the whole folder and run LanternDepths.exe. Choose English in Settings.
 Defeat the floor-5 guardian, then claim the ember at >. Click enemies to inspect.
-Use arrows/WASD to move, G to collect, I for pack, U to use, E to equip, Enter for stairs.
+Use arrows/WASD to move, G to collect, I for pack, U to use, E to equip, Enter for the contextual action (pick up, stairs, or wait).
 Esc opens the menu. Settings offers language, text size, sound, display and key bindings.
 Each successful action autosaves. Old format-1 saves migrate while preserving progress.
 See CREDITS.txt, Unity-Third-Party-Notices.txt and BUILD_INFO.txt for credits/version.

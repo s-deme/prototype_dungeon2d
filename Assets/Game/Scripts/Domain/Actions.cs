@@ -2,7 +2,7 @@ using System.Collections.Generic;
 
 namespace LanternDepths
 {
-    public enum CommandKind { Move, Wait, PickUp, Use, Drop, Equip, Unequip, Descend, Shoot, Charge, Smash }
+    public enum CommandKind { Move, Wait, PickUp, Use, Drop, Equip, Unequip, Descend, Shoot, Charge, Smash, Context }
     public readonly struct PlayerCommand
     {
         public CommandKind Kind { get; }

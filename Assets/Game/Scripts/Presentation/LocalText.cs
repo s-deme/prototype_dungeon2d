@@ -11,6 +11,8 @@ namespace LanternDepths.Presentation
         public static System.Func<UnityEngine.KeyCode, UnityEngine.KeyCode> KeyMap = key => key;
         private static readonly Dictionary<string, string> phrases = new Dictionary<string, string>
         {
+            { "Lantern: you / Triangle: facing / Click or focus an enemy or item to inspect.", "ランタン：自分 ／ 三角：向き ／ 敵や道具をクリック・フォーカスして詳細表示" },
+            { "Click or focus an enemy or item to inspect.", "敵や道具をクリック・フォーカスして詳細表示。調べるキーで順に選択。" },
             { "A turn-based descent into the ember vaults", "一手ずつ進む、残り火を探す冒険" },
             { "THE EMBER VAULTS", "残り火の地下迷宮" }, { "WAYFARER", "旅人" },
             { "@ YOU   m MELEE / r ARCHER / B GUARDIAN   ! TONIC   * BLAST   ? RETREAT   / WEAPON   ] ARMOR   > STAIRS", "@ 自分   m 近接 / r 射手 / B 守護者   ! 回復   * 爆薬   ? 退避   / 武器   ] 防具   > 階段" },
@@ -29,7 +31,7 @@ namespace LanternDepths.Presentation
             { "Your saved descent continues.", "保存した冒険を再開しました。" }, { "Previous save restored.", "前のセーブを復元しました。" },
             { "Bump into enemies to attack. Every successful action advances the dungeon.", "敵のいるマスへ移動すると攻撃。行動が成功すると敵も動きます。" },
             { "Recover the ember at the stairs to win.", "守護者を倒し、階段で残り火を回収しよう。" },
-            { "Claim the ember", "残り火を回収" }, { "Stairs down", "下り階段" }, { "Choose your next step", "次の一歩を選ぼう" },
+            { "Claim the ember", "残り火を回収" }, { "Stairs down", "下り階段" }, { "Wait in place", "その場で待機" },
             { "THE EMBER RETURNS", "残り火を取り戻した" }, { "THE LANTERN FADES", "灯火は消えた" },
             { "You reclaimed the ember and found your way home.\nDescent complete.", "残り火を取り戻し、帰路についた。\n冒険クリア。" },
             { "Your pack and progress are lost.\nA new descent awaits.", "この冒険は終わった。\n新たな挑戦が待っている。" },
@@ -48,7 +50,7 @@ namespace LanternDepths.Presentation
             { "The guardian's strike hits empty ground.", "守護者の強打は空を切った。" },
             { "Could not create the next floor. Your current floor is intact.", "次の階を生成できませんでした。現在の階は保持されています。" },
             { "You recover the vault's ember. Your lantern lights the way home.", "残り火を回収した。ランタンが帰り道を照らす。" },
-            { "Stairs found. Use them when you are ready [Enter / LB].", "階段を発見。準備ができたら階段操作で先へ進もう。" },
+            { "Stairs found. Press the action button to descend [Enter / LB].", "階段を発見。アクションボタンで先へ進もう。" },
             { "No enemy is within blast range (2 tiles).", "爆発の範囲（2マス）に敵がいません。" },
             { "There is no danger to escape.", "退避が必要な敵はいません。" }, { "No safer escape tile is reachable.", "今より安全な退避先がありません。" },
             { "The rune carries you away from danger.", "ルーンの力で危険から離れた。" },
@@ -67,7 +69,7 @@ namespace LanternDepths.Presentation
             { "Healing", "回復" }, { "Weapon", "武器" }, { "Armor", "防具" }, { "Blink", "退避" }, { "Blast", "範囲攻撃" },
             { "WEAPON", "武器" }, { "ARMOR", "防具" }, { "None", "なし" }, { "LEVEL", "レベル" }, { "TURN", "ターン" }, { "FLOOR", "階層" }, { "PACK", "持ち物" },
             { "Victory", "クリア" }, { "Defeat", "敗北" }, { "Abandoned", "中断して再出発" },
-            { "Menu", "メニュー" }, { "Pack", "持ち物" }, { "Wait", "待機" }, { "Pick up", "拾う" }, { "Down", "降りる" }, { "Claim", "回収" }, { "Use", "使う" }, { "Equip", "装備" }, { "Remove", "外す" }, { "Drop", "置く" },
+            { "Menu", "メニュー" }, { "Pack", "持ち物" }, { "Wait", "待機" }, { "Pick up", "拾う" }, { "Action", "アクション" }, { "Use", "使う" }, { "Equip", "装備" }, { "Remove", "外す" }, { "Drop", "置く" },
             { "Inspect", "敵を調べる" }, { "No enemies remain.", "この階の敵はいません。" },
             { "Melee: closes in and attacks adjacent tiles.", "近接：接近して隣のマスを攻撃。" },
             { "Archer: range 4, retreats when adjacent. Walls block shots.", "射手：射程4。隣接すると後退。壁で射撃を防げる。" },
@@ -94,7 +96,7 @@ namespace LanternDepths.Presentation
             value = Regex.Replace(value, @"You enter floor (\d+)\.", "$1 階に到着。");
             value = Regex.Replace(value, @"Recover the ember at the stairs on floor (\d+)\. Find the stairs and descend\.", "$1 階の階段で残り火を回収しよう。まずは下り階段を探そう。");
             value = Regex.Replace(value, @"Reach floor (\d+) and recover the ember\.", "$1 階を目指し、残り火を回収しよう。");
-            value = Regex.Replace(value, @"Here: (.+)\. Pick it up to keep it\.", "足元：$1。拾って持ち物に加えよう。");
+            value = Regex.Replace(value, @"Here: (.+)\. Press the action button to pick it up\.", "足元：$1。アクションボタンで拾おう。");
             value = Regex.Replace(value, @"Picked up (.+)\.", "$1 を拾った。");
             value = Regex.Replace(value, @"Used (.+)\. Recovered (\d+) HP\.", "$1 を使用。HPが $2 回復。");
             value = Regex.Replace(value, @"Used (.+)\.", "$1 を使用。");

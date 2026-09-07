@@ -60,9 +60,9 @@ namespace LanternDepths
                     result.Add(new GameEvent(EventKind.Used, $"Used {item.Definition.Name}. Recovered {healed} HP.", state.Player.Id, amount: healed));
                     break;
                 case CommandKind.Drop:
-                    if (state.Floor.GetItemAt(position) != null || position == state.Floor.Stairs)
+                    if (!TryFindDropPosition(state.Floor, position, out var dropPosition))
                     { result.Say("There is no room to drop an item here."); return result; }
-                    state.Floor.PlaceItem(position, item);
+                    state.Floor.PlaceItem(dropPosition, item);
                     state.Equipment.Unequip(item.Id); state.Inventory.Remove(item);
                     result.Say($"Dropped {item.Definition.Name}."); break;
                 case CommandKind.Equip:
@@ -74,6 +74,23 @@ namespace LanternDepths
                 default: result.Say("That item action is unavailable."); return result;
             }
             result.ConsumesTurn = true; return result;
+        }
+        private static bool TryFindDropPosition(FloorState floor, GridPosition origin, out GridPosition dropPosition)
+        {
+            var visited = new HashSet<GridPosition> { origin };
+            var queue = new Queue<GridPosition>(); queue.Enqueue(origin);
+            while (queue.Count > 0)
+            {
+                var position = queue.Dequeue();
+                if (position != floor.Stairs && floor.GetItemAt(position) == null && floor.GetEnemyAt(position) == null)
+                { dropPosition = position; return true; }
+                foreach (var direction in MovementRules.Directions)
+                {
+                    var next = position + direction;
+                    if (visited.Add(next) && MovementRules.CanReachAdjacent(floor.Map, position, next)) queue.Enqueue(next);
+                }
+            }
+            dropPosition = default; return false;
         }
     }
 }

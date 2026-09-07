@@ -38,7 +38,7 @@ namespace LanternDepths.Tests
             Assert.That(state.Inventory.Items.Count, Is.Zero);
             Assert.That(resolver.Resolve(state, state.Player, use).ConsumesTurn, Is.False);
         }
-        [Test] public void EquipmentSwapsAndFailedDropsKeepEquipmentIntact()
+        [Test] public void EquipmentSwapsAndDropsBesideAnOccupiedTile()
         {
             var state = State(); var definitions = Definitions(); var resolver = new ActionResolver();
             state.Inventory.TryAdd(new ItemInstance(1, definitions[1])); state.Inventory.TryAdd(new ItemInstance(2, definitions[2]));
@@ -49,14 +49,21 @@ namespace LanternDepths.Tests
             resolver.Resolve(state, state.Player, new PlayerCommand(CommandKind.Equip, itemId: 3));
             Assert.That(state.Equipment.WeaponId, Is.EqualTo(3)); Assert.That(state.Inventory.Items.Count, Is.EqualTo(3));
             state.Floor.PlaceItem(state.Player.Position, new ItemInstance(4, definitions[0]));
-            Assert.That(resolver.Resolve(state, state.Player, new PlayerCommand(CommandKind.Drop, itemId: 3)).ConsumesTurn, Is.False);
-            Assert.That(state.Equipment.WeaponId, Is.EqualTo(3));
-            state.Player.Position = new GridPosition(3, 2);
             Assert.That(resolver.Resolve(state, state.Player, new PlayerCommand(CommandKind.Drop, itemId: 3)).ConsumesTurn, Is.True);
             Assert.That(state.Equipment.WeaponId, Is.EqualTo(-1)); Assert.That(state.Inventory.Find(3), Is.Null);
-            Assert.That(state.Floor.GetItemAt(state.Player.Position).Id, Is.EqualTo(3));
+            Assert.That(state.Floor.GetItemAt(state.Player.Position).Id, Is.EqualTo(4));
+            GridPosition dropped = default; foreach (var pair in state.Floor.Items) if (pair.Value.Id == 3) dropped = pair.Key;
+            Assert.That(dropped.Distance(state.Player.Position), Is.EqualTo(1));
             Assert.That(resolver.Resolve(state, state.Player, new PlayerCommand(CommandKind.Unequip, itemId: 2)).ConsumesTurn, Is.True);
             Assert.That(StatCalculator.Defense(state, state.Player), Is.EqualTo(1));
+        }
+        [Test] public void ContextPicksUpFirstAndOtherwiseWaits()
+        {
+            var state = State(); var resolver = new ActionResolver(); var item = new ItemInstance(1, Definitions()[0]);
+            state.Floor.PlaceItem(state.Player.Position, item);
+            Assert.That(resolver.Resolve(state, state.Player, new PlayerCommand(CommandKind.Context)).ConsumesTurn, Is.True);
+            Assert.That(state.Inventory.Find(item.Id), Is.SameAs(item));
+            Assert.That(resolver.Resolve(state, state.Player, new PlayerCommand(CommandKind.Context)).ConsumesTurn, Is.True);
         }
         [Test] public void FloorChangePreservesInventoryEquipmentAndProgression()
         {

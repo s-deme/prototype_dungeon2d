@@ -7,6 +7,26 @@ namespace LanternDepths.Tests
 {
     public sealed class InputTests
     {
+        [Test] public void PictogramsKeepFacingAndItemsAcrossSync()
+        {
+            var game = new RunController(new RunRules(40, 28, 8, 3, 30, 6, 1, new ProgressionRules(new[] { 12 }, 5, 2), new[] { new ItemDefinition("tonic", "Tonic", "Restores HP", ItemKind.Healing, 18) })); game.StartNewRun(12345);
+            var root = new UnityEngine.UIElements.VisualElement();
+            var grid = new GridPresenter(root);
+            grid.Build(game.State);
+            var player = UnityEngine.UIElements.UQueryExtensions.Q<UnityEngine.UIElements.VisualElement>(root, className: "player");
+            grid.FacePlayer(new GridPosition(-1, 0));
+            grid.Sync(game.State);
+            Assert.That(player.GetType().GetProperty("Facing").GetValue(player), Is.EqualTo(Vector2.left));
+            grid.FacePlayer(default);
+            Assert.That(player.GetType().GetProperty("Facing").GetValue(player), Is.EqualTo(Vector2.left));
+            Assert.That(UnityEngine.UIElements.UQueryExtensions.Query<UnityEngine.UIElements.Label>(root).ToList(), Is.Empty);
+            var enemy = UnityEngine.UIElements.UQueryExtensions.Q<UnityEngine.UIElements.VisualElement>(root, className: "enemy");
+            Assert.That(enemy.focusable, Is.True);
+            var item = UnityEngine.UIElements.UQueryExtensions.Q<UnityEngine.UIElements.VisualElement>(root, className: "item");
+            Assert.That(item, Is.Not.Null);
+            grid.Sync(game.State);
+            Assert.That(UnityEngine.UIElements.UQueryExtensions.Q<UnityEngine.UIElements.VisualElement>(root, className: "item"), Is.SameAs(item));
+        }
         [Test] public void RemappedKeysAndPreferencesSurviveReloadAndHistoryDeduplicates()
         {
             string folder = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "LanternPreferences-" + System.Guid.NewGuid().ToString("N"));
@@ -45,6 +65,19 @@ namespace LanternDepths.Tests
             keys.Clear(); keys.Add(KeyCode.Space); adapter.TryRead(false, out var wait); Assert.That(wait.Kind, Is.EqualTo(CommandKind.Wait));
             Assert.That(adapter.TryRead(true, out _), Is.False);
         }
+        [Test] public void HeldMovementRepeatsAfterTheInitialDelay()
+        {
+            var down = new HashSet<KeyCode>(); var held = new HashSet<KeyCode>(); float time = 0;
+            var adapter = new PlayerInputAdapter(down.Contains, held.Contains, _ => 0, () => time);
+            down.Add(KeyCode.W); held.Add(KeyCode.W);
+            Assert.That(adapter.TryRead(false, out var first), Is.True); Assert.That(first.Direction, Is.EqualTo(new GridPosition(0, 1)));
+            down.Clear(); time = 0.24f; Assert.That(adapter.TryRead(false, out _), Is.False);
+            time = 0.25f; Assert.That(adapter.TryRead(false, out var repeat), Is.True); Assert.That(repeat.Direction, Is.EqualTo(new GridPosition(0, 1)));
+            time = 0.34f; Assert.That(adapter.TryRead(false, out _), Is.False);
+            time = 0.35f; Assert.That(adapter.TryRead(false, out _), Is.True);
+            held.Clear(); time = 0.36f; Assert.That(adapter.TryRead(false, out _), Is.False);
+            down.Add(KeyCode.D); held.Add(KeyCode.D); Assert.That(adapter.TryRead(false, out var changed), Is.True); Assert.That(changed.Direction, Is.EqualTo(new GridPosition(1, 0)));
+        }
         [Test] public void GamepadEdgesAndMenuInputDoNotRepeatMovement()
         {
             var keys = new HashSet<KeyCode>(); var axes = new Dictionary<string, float>();
@@ -59,7 +92,7 @@ namespace LanternDepths.Tests
             axes.Clear(); adapter.TryRead(false, out _); keys.Add(KeyCode.JoystickButton2);
             adapter.TryRead(false, out var pick); Assert.That(pick.Kind, Is.EqualTo(CommandKind.PickUp)); Assert.That(adapter.EquipPressed, Is.True);
             keys.Clear(); keys.Add(KeyCode.JoystickButton3); Assert.That(adapter.InventoryPressed, Is.True);
-            keys.Clear(); keys.Add(KeyCode.JoystickButton4); adapter.TryRead(false, out var stairs); Assert.That(stairs.Kind, Is.EqualTo(CommandKind.Descend));
+            keys.Clear(); keys.Add(KeyCode.JoystickButton4); adapter.TryRead(false, out var action); Assert.That(action.Kind, Is.EqualTo(CommandKind.Context));
             keys.Clear(); keys.Add(KeyCode.DownArrow); adapter.TryRead(true, out _); Assert.That(adapter.SelectionDelta, Is.EqualTo(1));
             keys.Clear(); keys.Add(KeyCode.JoystickButton7); Assert.That(adapter.RestartPressed, Is.True);
             Assert.That(adapter.MenuPressed, Is.True);

@@ -36,6 +36,37 @@ namespace LanternDepths.Tests
                 Assert.That(same.Entrance, Is.EqualTo(floor.Entrance)); Assert.That(same.Stairs, Is.EqualTo(floor.Stairs));
             }
         }
+        [Test] public void CorridorsAreSingleWidthAndTreasureOnlyUsesDeadEnds()
+        {
+            var rules = new RunRules(40, 28, 8, 6, 30, 6, 1, new ProgressionRules(new[] { 12 }, 5, 2), TacticalTests.Items());
+            for (int seed = 0; seed < 25; seed++)
+            {
+                var floor = new FloorFactory(new RoomCorridorGenerator(), rules).Create(new Random(seed), 1);
+                int rewards = 0;
+                for (int y = 1; y < floor.Map.Height - 1; y++) for (int x = 1; x < floor.Map.Width - 1; x++)
+                {
+                    var position = new GridPosition(x, y);
+                    if (floor.Map.GetTile(position).Terrain != Terrain.Corridor) continue;
+                    int corridorNeighbors = 0, roomNeighbors = 0, exits = 0;
+                    foreach (var direction in new[] { new GridPosition(0, 1), new GridPosition(1, 0), new GridPosition(0, -1), new GridPosition(-1, 0) })
+                    {
+                        var neighbor = floor.Map.GetTile(position + direction);
+                        if (neighbor.Terrain == Terrain.Corridor) corridorNeighbors++;
+                        if (neighbor.Terrain == Terrain.Room) roomNeighbors++;
+                        if (neighbor.IsWalkable) exits++;
+                    }
+                    Assert.That(corridorNeighbors, Is.LessThanOrEqualTo(2), $"Seed {seed} has a double-width corridor.");
+                    if (roomNeighbors > 0) Assert.That(corridorNeighbors, Is.LessThanOrEqualTo(1), $"Seed {seed} has a corridor running alongside a room.");
+                    var item = floor.GetItemAt(position);
+                    if (item != null)
+                    {
+                        Assert.That(exits, Is.EqualTo(1), $"Seed {seed} put an item in a corridor instead of its dead end.");
+                        Assert.That(item.Definition.Kind, Is.Not.EqualTo(ItemKind.Healing), $"Seed {seed} used a basic reward at a dead end."); rewards++;
+                    }
+                }
+                Assert.That(rewards, Is.GreaterThan(0), $"Seed {seed} has no dead-end reward.");
+            }
+        }
         [Test] public void DescendingPreservesPlayerAndSkipsEnemyActions()
         {
             var game = new RunController(Rules()); game.StartNewRun(12);

@@ -64,7 +64,7 @@ namespace LanternDepths.Presentation
                 if (rules == null || theme == null) throw new InvalidOperationException("Assign the game rules and theme on the Main scene bootstrap.");
                 game = new RunController(rules.ToRules());
                 hud = new HudPresenter(root, Submit, ToggleInventory, Restart, ToggleMenu);
-                inventory = new InventoryPresenter(hud.Pack, Submit, ToggleInventory); grid = new GridPresenter(hud.Map, hud.Inspect);
+                inventory = new InventoryPresenter(hud.Pack, Submit, ToggleInventory); grid = new GridPresenter(hud.Map, hud.Inspect, hud.InspectItem);
                 menu = new MenuPresenter(hud.Root, ToggleMenu, () => SaveCurrent(), Quit, RequestNewRun, RequestBackup, ToggleAnimation, OpenUtilities);
                 utility = new UtilityPresenter(hud.Root);
                 string directory = Application.persistentDataPath;
@@ -186,6 +186,7 @@ namespace LanternDepths.Presentation
         {
             if (busy || utility.IsOpen || MenuOpen || loadBlocked) return;
             if (game.State.IsFinished) { Refresh(); return; }
+            if (command.Kind == CommandKind.Move) grid.FacePlayer(command.Direction);
             var result = game.Execute(command);
             if (result.ConsumesTurn) SaveCurrent();
             StartCoroutine(Present(result));

@@ -31,11 +31,12 @@
 .floor-even { background-color: #2c3a46; }
 .floor-odd { background-color: #293642; }
 .corridor { background-color: #26333f; }
-.glyph { margin: 0; padding: 0; -unity-text-align: middle-center; -unity-font-style: bold; }
-.player { background-color: #efc37c; color: #101821; border-radius: 5px; }
-.enemy { color: #ffaaa0; background-color: #482e38; border-radius: 7px; }
+.glyph { margin: 0; padding: 0; }
+.player { color: var(--accent); }
+.enemy { color: #ffaaa0; }
 .item { color: #a5e8cf; }
-.stairs { background-color: #467061; color: #ffffff; }
+.stairs { color: #ffffff; background-color: #365448; }
+.glyph:focus { border-width: 1px; border-color: #ffffff; background-color: #405568; }
 .hit { background-color: #ffffff; color: #101821; }
 .legend { font-size: 13px; color: var(--muted); margin-top: 10px; white-space: normal; }
 .sidebar { width: 338px; padding: 8px 18px 16px 18px; background-color: var(--container); border-radius: 8px; }

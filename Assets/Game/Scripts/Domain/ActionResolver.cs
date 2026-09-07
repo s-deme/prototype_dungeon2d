@@ -10,6 +10,9 @@ namespace LanternDepths
         {
             var result = new ActionResult();
             if (state.IsFinished || !actor.IsAlive) return result;
+            if (actor == state.Player && command.Kind == CommandKind.Context)
+                command = state.Floor.GetItemAt(actor.Position) != null ? new PlayerCommand(CommandKind.PickUp) :
+                    actor.Position == state.Floor.Stairs ? new PlayerCommand(CommandKind.Descend) : new PlayerCommand(CommandKind.Wait);
             if (actor != state.Player && command.Kind == CommandKind.Shoot && actor.Role == EnemyRole.Archer)
             { combat.Attack(state, actor, state.Player, result, 4); return result; }
             if (actor != state.Player && actor.Role == EnemyRole.Guardian)
@@ -55,8 +58,8 @@ namespace LanternDepths
             { result.Say("The way is blocked."); return result; }
             var from = actor.Position; actor.Position = destination;
             result.Add(new GameEvent(EventKind.Moved, "", actor.Id, from, destination));
-            if (actor == state.Player && destination == state.Floor.Stairs) result.Say("Stairs found. Use them when you are ready [Enter / LB].");
-            if (actor == state.Player && state.Floor.GetItemAt(destination) is ItemInstance ground) result.Say($"Here: {ground.Definition.Name}. Pick it up to keep it.");
+            if (actor == state.Player && destination == state.Floor.Stairs) result.Say("Stairs found. Press the action button to descend [Enter / LB].");
+            if (actor == state.Player && state.Floor.GetItemAt(destination) is ItemInstance ground) result.Say($"Here: {ground.Definition.Name}. Press the action button to pick it up.");
             result.ConsumesTurn = true;
             return result;
         }
