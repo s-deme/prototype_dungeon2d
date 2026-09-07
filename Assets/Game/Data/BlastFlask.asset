@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23a023a023a023a023a023a023a023a0, type: 3}
+  m_Name: BlastFlask
+  itemId: blast-flask
+  displayName: Blast Flask
+  description: Deal 8 damage to every visible enemy within 2 tiles.
+  kind: 4
+  power: 8
+  penalty: 0

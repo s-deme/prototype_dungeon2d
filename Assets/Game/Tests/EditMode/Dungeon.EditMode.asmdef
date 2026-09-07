@@ -1,0 +1,6 @@
+{
+  "name": "Dungeon.EditMode",
+  "references": ["Dungeon.Domain"],
+  "includePlatforms": ["Editor"],
+  "optionalUnityReferences": ["TestAssemblies"]
+}

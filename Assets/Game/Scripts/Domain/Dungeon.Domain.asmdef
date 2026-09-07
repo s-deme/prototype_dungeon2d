@@ -1,0 +1,5 @@
+{
+  "name": "Dungeon.Domain",
+  "rootNamespace": "LanternDepths",
+  "noEngineReferences": true
+}

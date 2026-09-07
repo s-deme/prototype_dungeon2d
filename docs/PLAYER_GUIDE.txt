@@ -1,0 +1,75 @@
+LANTERN DEPTHS 1.1 — Windows x64
+
+起動
+フォルダー全体を展開し、LanternDepths.exeを起動してください。
+隣のLanternDepths_Data、MonoBleedingEdge、DLLも必要です。Unity Editorは不要です。
+初回は遊び方を表示します。メニューの「設定・遊び方・記録」から再表示できます。
+
+目標と戦闘
+5階で残り火の守護者を倒し、階段 > で残り火を回収するとクリア。
+敵のいるマスへ移動すると攻撃。成功した行動ごとに敵も1回行動します。
+失敗した操作、持ち物閲覧、敵情報、メニューはターンを消費しません。
+壁の角を斜めに通り抜けることはできません。
+m 近接敵は接近して攻撃。r 射手は4マスまで射撃し、隣接時に退きます。
+B 守護者は攻撃を予告してから強打。隣接しない位置へ移動すると回避できます。
+射撃と爆薬は壁で遮られます。敵をクリック、またはTab/右スティック押し込みで調査。
+階ごとに敵の構成と追加アイテムが変化します。
+
+道具と装備
+! 残り火の薬：HP18回復。満タンなら消費しません。
+? 退避ルーン：通れる道を最大4歩進んだ範囲で、敵から遠い場所へ退避。
+* 爆薬瓶：遮られていない周囲2マスの敵すべてに8ダメージ。
+使える対象・退避先がない場合、道具もターンも消費しません。
+/ 銅の刃：攻撃+3。重い大剣：攻撃+6、防御-2。
+] 織り防具：防御+2。板金鎧：防御+5、攻撃-2。能力の下限は0です。
+持ち物は20個まで。種類・名称順に自動整列し、装備変更時の能力差を表示します。
+
+初期操作 / Xbox形式ゲームパッド
+移動：矢印、WASD、テンキー1〜9（5以外）/ 左スティック・D-pad
+斜め移動：Q E Z C / テンキー7 9 1 3
+待機：Space・テンキー5 / A
+拾う：G / X　持ち物：I / Y　階段：Enter / LB
+持ち物で選択：上下 / D-pad　使用：U / A　装備・解除：E / X　置く：D / RB
+敵情報：Tab / 右スティック押し込み
+メニュー：Esc / Start　決定：Enter・テンキーEnter / A　閉じる：Esc / B
+演出切替：F / Back　終了後の再挑戦：R
+1回押すと1行動。スティックは中央に戻してから倒し直してください。
+
+設定
+メニュー > 設定・遊び方・記録 > 設定
+日本語/English、文字100/110/120%、効果音0/25/50/75/100%、全画面/ウィンドウを変更。
+英字・数字・Space・Enter・Tabのキー割り当てを変更できます。
+使用済みのキーを選ぶと割り当てを交換します。Escで変更を中止。
+矢印・テンキー・ゲームパッドは固定で、変更後も使用できます。
+画面上の操作キー表示と遊び方の「現在のキー割り当て」で確認できます。
+
+保存と記録
+成功した行動ごとに自動保存。メニューの「保存して終了」で終了できます。
+次回は結果画面を含めて続きから再開。新しい冒険は確認後に現在のセーブを置き換えます。
+同じ保存フォルダーを使えるゲームは一度に1つです。
+保存先：%USERPROFILE%\AppData\LocalLow\LanternWorks\Lantern Depths\
+run.sav：現在の冒険　run.sav.bak：前回の異なる保存
+settings.dat：演出設定　preferences.json：言語・文字・音量・画面・キー設定
+history.json：直近1000冒険の結果と現在の冒険の直近200行の履歴
+session.lock：使用中のロック（ファイルが残っていても起動中とは限りません）
+記録にはクリア・敗北・新規開始で終えた冒険、到達階・レベル・ターン・シードを保存。
+クリア数・最高到達階は保持している直近1000件の集計です。
+
+保存できない場合は進行をメモリに保持します。空き容量とフォルダー権限を確認して再保存。
+読み込みに失敗した場合は元のファイルを保持し、復元または新規開始を案内します。
+形式1の旧セーブを形式2へ移行できます。現在の階・所持品・進行は保持されます。
+旧セーブの現在階の敵は従来の近接行動を維持し、次の階から新しい敵構成になります。
+未知の形式や異なるゲームルールは拒否します。更新前のフォルダー複製も可能です。
+
+制限
+Windowsの日本語フォント（游ゴシック等）を使用します。文字グリフによる描画です。
+全マップ表示。空腹・状態異常・BGMなし。オフラインの1人用ゲームです。
+ゲームパッドはWindows Xbox形式向け。物理デバイスの接続検証は未実施です。
+
+English quick start
+Extract the whole folder and run LanternDepths.exe. Choose English in Settings.
+Defeat the floor-5 guardian, then claim the ember at >. Click enemies to inspect.
+Use arrows/WASD to move, G to collect, I for pack, U to use, E to equip, Enter for stairs.
+Esc opens the menu. Settings offers language, text size, sound, display and key bindings.
+Each successful action autosaves. Old format-1 saves migrate while preserving progress.
+See CREDITS.txt, Unity-Third-Party-Notices.txt and BUILD_INFO.txt for credits/version.

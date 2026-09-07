@@ -1,0 +1,12 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23a023a023a023a023a023a023a023a0, type: 3}
+  m_Name: WovenGuard
+  itemId: woven-guard
+  displayName: Woven Guard
+  description: Defense +2 while equipped. Layered fibers soften incoming blows.
+  kind: 2
+  power: 2

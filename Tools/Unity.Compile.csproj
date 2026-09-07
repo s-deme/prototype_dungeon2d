@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <LangVersion>9.0</LangVersion>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <NuGetAudit>false</NuGetAudit>
+    <UnityEditorRoot Condition="'$(UnityEditorRoot)' == ''">E:/game_projects/editor/6000.3.22f1/Editor</UnityEditorRoot>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../Assets/Game/Scripts/**/*.cs" />
+    <Reference Include="$(UnityEditorRoot)/Data/Managed/UnityEngine/UnityEngine*.dll" />
+  </ItemGroup>
+</Project>

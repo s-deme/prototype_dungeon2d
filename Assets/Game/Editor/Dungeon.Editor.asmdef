@@ -1,0 +1,5 @@
+{
+  "name": "Dungeon.Editor",
+  "references": ["Dungeon.Domain", "Dungeon.Content", "Dungeon.Presentation"],
+  "includePlatforms": ["Editor"]
+}

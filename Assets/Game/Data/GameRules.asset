@@ -1,0 +1,34 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 34b034b034b034b034b034b034b034b0, type: 3}
+  m_Name: GameRules
+  mapWidth: 40
+  mapHeight: 28
+  roomCount: 8
+  enemyCount: 6
+  playerHp: 30
+  playerAttack: 6
+  playerDefense: 1
+  experienceThresholds:
+  - 12
+  - 30
+  - 60
+  - 100
+  - 160
+  - 240
+  - 340
+  - 460
+  - 600
+  hpPerLevel: 5
+  attackPerLevel: 2
+  items:
+  - {fileID: 11400000, guid: 67e067e067e067e067e067e067e067e0, type: 2}
+  - {fileID: 11400000, guid: 78f078f078f078f078f078f078f078f0, type: 2}
+  - {fileID: 11400000, guid: 89a089a089a089a089a089a089a089a0, type: 2}
+  - {fileID: 11400000, guid: 7096ea65428f7ae21779baa342a40177, type: 2}
+  - {fileID: 11400000, guid: a3439b566f88c09eb61daacdd0cba569, type: 2}
+  - {fileID: 11400000, guid: 14c963dd333945edac5511b8f9fb942e, type: 2}
+  - {fileID: 11400000, guid: 5dfb3ff69d1d133d08a86d156d1d26df, type: 2}

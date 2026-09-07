@@ -1,0 +1,4 @@
+{
+  "name": "Dungeon.Presentation",
+  "references": ["Dungeon.Domain", "Dungeon.Content"]
+}

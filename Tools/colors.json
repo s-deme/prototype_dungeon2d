@@ -1,0 +1,17 @@
+{
+  "colors": {
+    "surface": "#101821", "container": "#192532", "text": "#edf2f4", "muted": "#afbecb",
+    "accent": "#efc37c", "button": "#293b4c", "enemy": "#ffaaa0", "enemy-background": "#482e38",
+    "item": "#a5e8cf", "floor": "#2c3a46", "disabled": "#a4b1bd", "disabled-background": "#1d2b37"
+  },
+  "pairs": [
+    {"foreground": "text", "background": "surface", "minimum": 4.5},
+    {"foreground": "muted", "background": "container", "minimum": 4.5},
+    {"foreground": "accent", "background": "surface", "minimum": 4.5},
+    {"foreground": "surface", "background": "accent", "minimum": 4.5},
+    {"foreground": "text", "background": "button", "minimum": 4.5},
+    {"foreground": "enemy", "background": "enemy-background", "minimum": 4.5},
+    {"foreground": "item", "background": "floor", "minimum": 4.5},
+    {"foreground": "disabled", "background": "disabled-background", "minimum": 4.5}
+  ]
+}
