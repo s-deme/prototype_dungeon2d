@@ -14,19 +14,20 @@ namespace LanternDepths
         public PlayerCommand ChooseAction(RunState state, CharacterState enemy, Random random)
         {
             var target = state.Player.Position;
+            var distanceToTarget = enemy.Position.Distance(target);
             if (enemy.Role == EnemyRole.Guardian && enemy.Charged) return new PlayerCommand(CommandKind.Smash);
             if (enemy.Role == EnemyRole.Archer)
             {
-                if (enemy.Position.Distance(target) <= 1)
+                if (distanceToTarget <= 1)
                     foreach (var direction in MovementRules.Directions)
                         if ((enemy.Position + direction).Distance(target) > 1 && MovementRules.CanMove(state.Floor, enemy, state.Player, enemy.Position + direction))
                             return new PlayerCommand(CommandKind.Move, direction);
-                if (enemy.Position.Distance(target) <= 4 && HasLineOfSight(state.Floor.Map, enemy.Position, target))
+                if (distanceToTarget <= 4 && HasLineOfSight(state.Floor.Map, enemy.Position, target))
                     return new PlayerCommand(CommandKind.Shoot);
             }
             if (MovementRules.CanReachAdjacent(state.Floor.Map, enemy.Position, target))
                 return new PlayerCommand(enemy.Role == EnemyRole.Guardian ? CommandKind.Charge : CommandKind.Move, target - enemy.Position);
-            if (enemy.Position.Distance(target) <= sightRange && HasLineOfSight(state.Floor.Map, enemy.Position, target))
+            if (distanceToTarget <= sightRange && HasLineOfSight(state.Floor.Map, enemy.Position, target))
             {
                 var step = FindStep(state.Floor, enemy, state.Player);
                 return step == enemy.Position ? new PlayerCommand(CommandKind.Wait) : new PlayerCommand(CommandKind.Move, step - enemy.Position);
