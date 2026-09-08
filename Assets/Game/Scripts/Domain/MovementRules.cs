@@ -1,17 +1,18 @@
 using System;
+using System.Collections.Generic;
 
 namespace LanternDepths
 {
     public static class MovementRules
     {
-        public static System.Collections.Generic.IEnumerable<GridPosition> Directions
+        private static readonly IReadOnlyList<GridPosition> AllDirections = Array.AsReadOnly(new[]
         {
-            get
-            {
-                for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++)
-                    if (x != 0 || y != 0) yield return new GridPosition(x, y);
-            }
-        }
+            new GridPosition(-1, -1), new GridPosition(0, -1), new GridPosition(1, -1),
+            new GridPosition(-1, 0),                         new GridPosition(1, 0),
+            new GridPosition(-1, 1),  new GridPosition(0, 1),  new GridPosition(1, 1)
+        });
+
+        public static IEnumerable<GridPosition> Directions => AllDirections;
         public static bool CanReachAdjacent(DungeonMap map, GridPosition from, GridPosition to)
         {
             if (from.Distance(to) != 1 || !map.IsWalkable(from) || !map.IsWalkable(to)) return false;
