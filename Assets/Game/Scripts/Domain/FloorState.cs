@@ -11,12 +11,13 @@ namespace LanternDepths
         public DungeonMap Map { get; }
         public GridPosition Entrance { get; }
         public GridPosition Stairs { get; }
-        public IReadOnlyList<CharacterState> Enemies => enemies.AsReadOnly();
+        public IReadOnlyList<CharacterState> Enemies { get; }
         public FloorState(DungeonMap map, GridPosition entrance, GridPosition stairs)
         {
             Map = map ?? throw new ArgumentNullException(nameof(map));
             if (!map.IsWalkable(entrance) || !map.IsWalkable(stairs)) throw new ArgumentException("Entrance and stairs must be walkable.");
             Entrance = entrance; Stairs = stairs;
+            Enemies = enemies.AsReadOnly();
         }
         public CharacterState GetEnemyAt(GridPosition position)
         {

@@ -15,6 +15,16 @@ namespace LanternDepths.Tests
             var p = new GridPosition(2, 2);
             return new RunState(new CharacterState(0, "P", p, 30, 6, 1), new FloorState(GridTests.OpenMap(), p, new GridPosition(5, 5)));
         }
+        [Test] public void InventoryViewStaysLiveAndReadOnly()
+        {
+            var inventory = new Inventory(); var view = inventory.Items;
+            var item = new ItemInstance(1, Definitions()[0]);
+            inventory.TryAdd(item);
+            Assert.That(view, Is.EqualTo(new[] { item }));
+            Assert.Throws<System.NotSupportedException>(() => ((System.Collections.Generic.IList<ItemInstance>)view).Clear());
+            inventory.Remove(item);
+            Assert.That(view, Is.Empty);
+        }
         [Test] public void InventoryCapacityAndFailedPickupPreserveGroundItem()
         {
             var state = State(); var definition = Definitions()[0];

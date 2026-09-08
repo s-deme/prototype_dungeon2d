@@ -18,8 +18,9 @@ namespace LanternDepths
             for (int y = 0; y < map.Height; y++) for (int x = 0; x < map.Width; x++)
             {
                 var position = new GridPosition(x, y);
-                if (map.GetTile(position).Terrain == Terrain.Room) rooms.Add(position);
-                if (map.GetTile(position).Terrain == Terrain.Corridor && IsDeadEnd(map, position)) deadEnds.Add(position);
+                var terrain = map.GetTile(position).Terrain;
+                if (terrain == Terrain.Room) rooms.Add(position);
+                if (terrain == Terrain.Corridor && IsDeadEnd(map, position)) deadEnds.Add(position);
             }
             int itemCount = rules.Items.Count == 0 ? 0 : 6;
             if (rooms.Count < rules.EnemyCount + 2 + itemCount) throw new InvalidOperationException("Not enough room floor space.");

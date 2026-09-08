@@ -24,8 +24,7 @@ namespace LanternDepths
             var floor = factory.Create(nextRandom, 1);
             var player = new CharacterState(0, "Wayfarer", floor.Entrance, rules.PlayerHp, rules.PlayerAttack, rules.PlayerDefense);
             var next = new RunState(player, floor, new PlayerProgression(rules.Progression));
-            Seed = seed; random = nextRandom; State = next;
-            turns = new TurnProcessor(new ActionResolver(Descend), brain, random);
+            InitializeRun(next, seed, nextRandom);
         }
         public ActionResult Execute(PlayerCommand command)
         {
@@ -36,7 +35,11 @@ namespace LanternDepths
         public void Load(byte[] data)
         {
             var next = RunSave.Read(data, rules, out int seed, out uint randomState);
-            State = next; Seed = seed; random = new RunRandom(randomState);
+            InitializeRun(next, seed, new RunRandom(randomState));
+        }
+        private void InitializeRun(RunState state, int seed, RunRandom nextRandom)
+        {
+            State = state; Seed = seed; random = nextRandom;
             turns = new TurnProcessor(new ActionResolver(Descend), brain, random);
         }
         private void Descend(RunState state)

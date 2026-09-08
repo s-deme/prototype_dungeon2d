@@ -39,13 +39,13 @@ namespace LanternDepths.Presentation
         {
             int previousId = Selected?.Id ?? -1;
             this.state = state; list.Clear(); ordered = state.Inventory.Items.OrderBy(i => i.Definition.Kind).ThenBy(i => i.Definition.Name).ThenBy(i => i.Id).ToArray();
-            var items = ordered.ToList();
-            int previousIndex = items.FindIndex(i => i.Id == previousId); if (previousIndex >= 0) selected = previousIndex;
-            selected = Math.Max(0, Math.Min(selected, items.Count - 1));
-            title.text = $"PACK  {items.Count} / {state.Inventory.Capacity}";
-            if (items.Count == 0) list.Add(new Label("Your pack is empty.\nStand on an item and press G to collect it."));
+            var items = ordered;
+            int previousIndex = Array.FindIndex(items, i => i.Id == previousId); if (previousIndex >= 0) selected = previousIndex;
+            selected = Math.Max(0, Math.Min(selected, items.Length - 1));
+            title.text = $"PACK  {items.Length} / {state.Inventory.Capacity}";
+            if (items.Length == 0) list.Add(new Label("Your pack is empty.\nStand on an item and press G to collect it."));
             Button selectedButton = null;
-            for (int i = 0; i < items.Count; i++)
+            for (int i = 0; i < items.Length; i++)
             {
                 int index = i; var item = items[i];
                 if (i == 0 || items[i - 1].Definition.Kind != item.Definition.Kind) list.Add(new Label(LocalText.T(item.Definition.Kind.ToString())));
@@ -59,7 +59,6 @@ namespace LanternDepths.Presentation
             if (chosen != null && chosen.Definition.IsEquipment)
             {
                 var candidate = chosen.Definition; bool weapon = candidate.Kind == ItemKind.Weapon;
-                var old = state.Inventory.Find(weapon ? state.Equipment.WeaponId : state.Equipment.ArmorId)?.Definition;
                 var newWeapon = weapon ? candidate : state.Inventory.Find(state.Equipment.WeaponId)?.Definition;
                 var newArmor = weapon ? state.Inventory.Find(state.Equipment.ArmorId)?.Definition : candidate;
                 int atk = Math.Max(0, state.Player.BaseAttack + (newWeapon?.Power ?? 0) - (newArmor?.Penalty ?? 0)) - StatCalculator.Attack(state, state.Player);

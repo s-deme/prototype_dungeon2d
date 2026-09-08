@@ -79,8 +79,7 @@ namespace LanternDepths.Presentation
             if (x != 0 || y != 0) return new GridPosition(x, y);
             foreach (var direction in MovementRules.Directions)
             {
-                int number = (direction.Y + 1) * 3 + direction.X + 2;
-                if (keyHeld((KeyCode)((int)KeyCode.Keypad0 + number))) return direction;
+                if (keyHeld(DirectionKey(direction))) return direction;
             }
             return default;
         }
@@ -91,11 +90,12 @@ namespace LanternDepths.Presentation
                 keyDown(KeyCode.Q) || keyDown(KeyCode.E) || keyDown(KeyCode.Z) || keyDown(KeyCode.C)) return true;
             foreach (var direction in MovementRules.Directions)
             {
-                int number = (direction.Y + 1) * 3 + direction.X + 2;
-                if (keyDown((KeyCode)((int)KeyCode.Keypad0 + number))) return true;
+                if (keyDown(DirectionKey(direction))) return true;
             }
             return false;
         }
+        private static KeyCode DirectionKey(GridPosition direction) =>
+            (KeyCode)((int)KeyCode.Keypad0 + ((direction.Y + 1) * 3 + direction.X + 2));
         private bool Held(KeyCode a, KeyCode b) => keyHeld(a) || keyHeld(b);
         private static int Quantize(float value) => value > 0.55f ? 1 : value < -0.55f ? -1 : 0;
     }

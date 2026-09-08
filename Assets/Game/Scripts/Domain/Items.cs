@@ -34,11 +34,12 @@ namespace LanternDepths
     public sealed class Inventory
     {
         private readonly List<ItemInstance> items = new List<ItemInstance>();
-        public IReadOnlyList<ItemInstance> Items => items.AsReadOnly();
+        public IReadOnlyList<ItemInstance> Items { get; }
         public int Capacity { get; }
         public Inventory(int capacity = 20)
         {
             if (capacity < 1) throw new ArgumentOutOfRangeException(nameof(capacity)); Capacity = capacity;
+            Items = items.AsReadOnly();
         }
         public ItemInstance Find(int id) => items.Find(item => item.Id == id);
         public bool TryAdd(ItemInstance item)

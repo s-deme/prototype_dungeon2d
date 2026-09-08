@@ -69,9 +69,10 @@ namespace LanternDepths.Presentation
         {
             binding = -1; utility.Open(L("キー割り当て", "Key bindings")); utility.Add("Back", OpenSettings);
             utility.Text(L("変更したい操作を選び、英字・数字・Space・Enter・Tabを押してください。Escで中止。矢印、テンキー、ゲームパッドは固定です。", "Choose an action, then press a letter, number, Space, Enter or Tab. Esc cancels. Arrows, numpad and gamepad remain available."));
+            var names = BindingNames;
             for (int i = 0; i < preferences.keys.Length; i++)
             {
-                int index = i; utility.Add(BindingNames[i] + ": " + (KeyCode)preferences.keys[i], () => { binding = index; utility.Open(BindingNames[index]); utility.Text(L("新しいキーを押してください。Escで中止。", "Press the new key. Esc cancels.")); });
+                int index = i; utility.Add(names[i] + ": " + (KeyCode)preferences.keys[i], () => { binding = index; utility.Open(BindingNames[index]); utility.Text(L("新しいキーを押してください。Escで中止。", "Press the new key. Esc cancels.")); });
             }
             utility.Add(L("初期設定に戻す", "Reset bindings"), () => { preferences.keys = PlayerPreferences.Defaults.Select(k => (int)k).ToArray(); OpenBindings(); StorePreferences(); }); ApplyPreferences();
         }

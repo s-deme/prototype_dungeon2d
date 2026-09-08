@@ -22,11 +22,11 @@ namespace LanternDepths
             if (width < 3 || height < 3 || width > 256 || height > 256) throw new ArgumentOutOfRangeException(nameof(width));
             Width = width; Height = height;
             tiles = new TileData[width * height];
-            for (int i = 0; i < tiles.Length; i++) tiles[i] = new TileData(Terrain.Wall);
+            Array.Fill(tiles, new TileData(Terrain.Wall));
         }
         public bool Contains(GridPosition p) => p.X >= 0 && p.Y >= 0 && p.X < Width && p.Y < Height;
         public TileData GetTile(GridPosition p) => Contains(p) ? tiles[p.Y * Width + p.X] : new TileData(Terrain.Wall);
-        public bool IsWalkable(GridPosition p) => Contains(p) && GetTile(p).IsWalkable;
+        public bool IsWalkable(GridPosition p) => GetTile(p).IsWalkable;
         public void SetTile(GridPosition p, TileData tile)
         {
             if (!Contains(p)) throw new ArgumentOutOfRangeException(nameof(p));
